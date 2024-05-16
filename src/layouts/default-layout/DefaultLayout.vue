@@ -13,7 +13,7 @@
           <div class="d-flex flex-column flex-column-fluid">
             <KTToolbar />
             <div id="kt_app_content" class="app-content flex-column-fluid">
-              <KTContent></KTContent>
+              <router-view></router-view>
             </div>
           </div>
           <!--end::Content wrapper-->
