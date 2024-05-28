@@ -86,32 +86,31 @@
         :header="headerConfig"
         :checkbox-enabled="true"
       >
-        <template v-slot:customer="{ row: customer }">
+        <template v-slot:customer="{ row: vm }">
           <router-link
             to="/apps/subscriptions/view-subscription"
-            href=""
             class="text-gray-800 text-hover-primary mb-1"
           >
-            {{ customer.customer }}
+            {{ vm.name }}
           </router-link>
         </template>
-        <template v-slot:status="{ row: customer }">
+        <template v-slot:status="{ row: vm }">
           <a href="#" class="text-gray-600 text-hover-primary mb-1">
-            <div :class="`badge badge-light-${customer.color}`">
-              {{ customer.status }}
+            <div class="badge badge-light-success">
+              {{ vm.status }}
             </div>
           </a>
         </template>
-        <template v-slot:billing="{ row: customer }">
-          <div class="badge badge-light">{{ customer.billing }}</div>
+        <template v-slot:billing="{ row: vm }">
+          <div class="badge badge-light">{{ vm.expiresAt }}</div>
         </template>
-        <template v-slot:product="{ row: customer }">
-          {{ customer.product }}
+        <template v-slot:product="{ row: vm }">
+          {{ vm.companyName }}
         </template>
-        <template v-slot:createdDate="{ row: customer }">
-          {{ customer.createdDate }}
+        <template v-slot:createdDate="{ row: vm }">
+          {{ vm.createdAt }}
         </template>
-        <template v-slot:actions="{ row: customer }">
+        <template v-slot:actions="{ row: vm }">
           <a
             href="#"
             class="btn btn-sm btn-light btn-active-light-primary"
@@ -137,7 +136,7 @@
             <!--end::Menu item-->
             <!--begin::Menu item-->
             <div class="menu-item px-3">
-              <a @click="deleteSubscription(customer.id)" class="menu-link px-3"
+              <a @click="deleteSubscription(vm._id)" class="menu-link px-3"
                 >Delete</a
               >
             </div>
@@ -159,15 +158,15 @@ import KTDatatable from "@/components/kt-datatable/KTDataTable.vue";
 import type { Sort } from "@/components/kt-datatable/table-partials/models";
 import arraySort from "array-sort";
 import { MenuComponent } from "@/assets/ts/components";
+import axios from 'axios';
 
-interface ISubscription {
-  id: number;
-  customer: string;
+interface IVM {
+  _id: string;
+  name: string;
   status: string;
-  color: string;
-  billing: string;
-  product: string;
-  createdDate: string;
+  expiresAt: string;
+  companyName: string;
+  createdAt: string;
 }
 
 export default defineComponent({
@@ -176,192 +175,11 @@ export default defineComponent({
     KTDatatable,
   },
   setup() {
-    const data = ref<Array<ISubscription>>([
-      {
-        id: 1,
-        customer: "Emma Smith",
-        status: "Active",
-        color: "success",
-        billing: "Auto-debit",
-        product: "Basic",
-        createdDate: "Oct 25, 2021",
-      },
-      {
-        id: 2,
-        customer: "Melody Macy",
-        status: "Active",
-        color: "success",
-        billing: "Manual - Credit Card",
-        product: "Basic",
-        createdDate: "Mar 10, 2021",
-      },
-      {
-        id: 3,
-        customer: "Max Smith",
-        status: "Active",
-        color: "primary",
-        billing: "Manual - Cash",
-        product: "Teams Bundle",
-        createdDate: "Jul 25, 2021",
-      },
-      {
-        id: 4,
-        customer: "Sean Bean",
-        status: "Expiring",
-        color: "warning",
-        billing: "Manual - Paypal",
-        product: "Enterprise",
-        createdDate: "Aug 19, 2021",
-      },
-      {
-        id: 5,
-        customer: "Brian Cox",
-        status: "Expiring",
-        color: "warning",
-        billing: "Auto-debit",
-        product: "Basic",
-        createdDate: "May 05, 2021",
-      },
-      {
-        id: 6,
-        customer: "Mikaela Collins",
-        status: "Active",
-        color: "success",
-        billing: "Auto-debit",
-        product: "Enterprise Bundle",
-        createdDate: "Aug 19, 2021",
-      },
-      {
-        id: 7,
-        customer: "Francis Mitcham",
-        status: "Active",
-        color: "success",
-        billing: "Auto-debit",
-        product: "Teams",
-        createdDate: "Jun 20, 2021",
-      },
-      {
-        id: 8,
-        customer: "Olivia Wild",
-        status: "Suspended",
-        color: "danger",
-        billing: "--",
-        product: "Enterprise",
-        createdDate: "Jun 24, 2021",
-      },
-      {
-        id: 9,
-        customer: "Neil Owen",
-        status: "Expiring",
-        color: "warning",
-        billing: "Auto-debit",
-        product: "Basic",
-        createdDate: "Aug 19, 2021",
-      },
-      {
-        id: 10,
-        customer: "Dan Wilson",
-        status: "Active",
-        color: "success",
-        billing: "Auto-debit",
-        product: "Enterprise Bundle",
-        createdDate: "Feb 21, 2021",
-      },
-      {
-        id: 11,
-        customer: "Emma Bold",
-        status: "Active",
-        color: "success",
-        billing: "Manual - Credit Card",
-        product: "Enterprise",
-        createdDate: "May 05, 2021",
-      },
-      {
-        id: 12,
-        customer: "Ana Crown",
-        status: "Active",
-        color: "success",
-        billing: "Manual - Credit Card",
-        product: "Basic",
-        createdDate: "Jun 24, 2021",
-      },
-      {
-        id: 13,
-        customer: "Robert Doe",
-        status: "Suspended",
-        color: "danger",
-        billing: "--",
-        product: "Teams Bundle",
-        createdDate: "Jul 25, 2021",
-      },
-      {
-        id: 14,
-        customer: "John Miller",
-        status: "Active",
-        color: "success",
-        billing: "Manual - Paypal",
-        product: "Enterprise",
-        createdDate: "Sep 22, 2021",
-      },
-      {
-        id: 15,
-        customer: "Lucy Kunic",
-        status: "Active",
-        color: "success",
-        billing: "Manual - Credit Card",
-        product: "Basic",
-        createdDate: "Nov 10, 2021",
-      },
-      {
-        id: 16,
-        customer: "Neil Owen",
-        status: "Suspended",
-        color: "danger",
-        billing: "--",
-        product: "Basic Bundle",
-        createdDate: "Jun 20, 2021",
-      },
-      {
-        id: 17,
-        customer: "Dan Wilson",
-        status: "Expiring",
-        color: "warning",
-        billing: "Manual - Paypal",
-        product: "Enterprise",
-        createdDate: "May 05, 2021",
-      },
-      {
-        id: 18,
-        customer: "Emma Smith",
-        status: "Active",
-        color: "success",
-        billing: "Auto-debit",
-        product: "Teams",
-        createdDate: "Apr 15, 2021",
-      },
-      {
-        id: 19,
-        customer: "Melody Macy",
-        status: "Active",
-        color: "success",
-        billing: "Manual - Credit Card",
-        product: "Basic",
-        createdDate: "Oct 25, 2021",
-      },
-      {
-        id: 20,
-        customer: "Max Smith",
-        status: "Suspended",
-        color: "danger",
-        billing: "--",
-        product: "Basic Bundle",
-        createdDate: "Feb 21, 2021",
-      },
-    ]);
+    const data = ref<Array<IVM>>([]);
     const headerConfig = ref([
       {
         columnName: "Customer",
-        columnLabel: "customer",
+        columnLabel: "name",
         sortEnabled: true,
       },
       {
@@ -371,17 +189,17 @@ export default defineComponent({
       },
       {
         columnName: "Billing",
-        columnLabel: "billing",
+        columnLabel: "expiresAt",
         sortEnabled: true,
       },
       {
         columnName: "Product",
-        columnLabel: "product",
+        columnLabel: "companyName",
         sortEnabled: true,
       },
       {
         columnName: "Created Date",
-        columnLabel: "createdDate",
+        columnLabel: "createdAt",
         sortEnabled: true,
       },
       {
@@ -390,24 +208,19 @@ export default defineComponent({
       },
     ]);
 
-    const initData = ref<Array<ISubscription>>([]);
-
-    onMounted(() => {
-      initData.value.splice(0, data.value.length, ...data.value);
-    });
-
-    const selectedIds = ref<Array<number>>([]);
+    const selectedIds = ref<Array<string>>([]);
     const deleteFewSubscriptions = () => {
       selectedIds.value.forEach((item) => {
         deleteSubscription(item);
       });
       selectedIds.value.length = 0;
     };
-    const deleteSubscription = (id: number) => {
-      for (let i = 0; i < data.value.length; i++) {
-        if (data.value[i].id === id) {
-          data.value.splice(i, 1);
-        }
+    const deleteSubscription = async (id: string) => {
+      try {
+        await axios.delete(`/api/vms/${id}`);
+        data.value = data.value.filter(vm => vm._id !== id);
+      } catch (error) {
+        console.error('Failed to delete subscription:', error);
       }
     };
     const sort = (sort: Sort) => {
@@ -416,41 +229,34 @@ export default defineComponent({
         arraySort(data.value, sort.label, { reverse });
       }
     };
-    const onItemSelect = (selectedItems: Array<number>) => {
+    const onItemSelect = (selectedItems: Array<string>) => {
       selectedIds.value = selectedItems;
     };
 
     const search = ref<string>("");
     const searchItems = () => {
-      data.value.splice(0, data.value.length, ...initData.value);
       if (search.value !== "") {
-        let results: Array<ISubscription> = [];
-        for (let j = 0; j < initData.value.length; j++) {
-          if (searchingFunc(initData.value[j], search.value)) {
-            results.push(initData.value[j]);
-          }
-        }
-        data.value.splice(0, data.value.length, ...results);
+        data.value = data.value.filter(vm => 
+          vm.name.toLowerCase().includes(search.value.toLowerCase())
+        );
+      } else {
+        fetchVMs();
       }
       MenuComponent.reinitialization();
     };
 
-    const searchingFunc = (obj: any, value: string): boolean => {
-      for (let key in obj) {
-        if (!Number.isInteger(obj[key]) && !(typeof obj[key] === "object")) {
-          if (obj[key].toLowerCase().indexOf(value.toLowerCase()) != -1) {
-            return true;
-          }
-        }
+    const fetchVMs = async () => {
+      try {
+        const response = await axios.get('/api/vms');
+        data.value = response.data;
+      } catch (error) {
+        console.error('Failed to fetch VMs:', error);
       }
-      return false;
     };
 
-    const onItemsPerPageChange = () => {
-      setTimeout(() => {
-        MenuComponent.reinitialization();
-      }, 0);
-    };
+    onMounted(() => {
+      fetchVMs();
+    });
 
     return {
       search,
@@ -463,8 +269,32 @@ export default defineComponent({
       deleteFewSubscriptions,
       deleteSubscription,
       getAssetPath,
-      onItemsPerPageChange,
+      onItemsPerPageChange: () => {
+        setTimeout(() => {
+          MenuComponent.reinitialization();
+        }, 0);
+      },
     };
   },
 });
 </script>
+
+<style scoped>
+.app-catalog {
+  padding: 20px;
+}
+.filters {
+  margin-bottom: 20px;
+}
+.app-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.app-card {
+  border: 1px solid #ddd;
+  padding: 20px;
+  width: 200px;
+  text-align: center;
+}
+</style>
