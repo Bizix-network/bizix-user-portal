@@ -22,6 +22,12 @@ const MainMenuConfig: Array<MenuItem> = [
         bootstrapIcon: "bi-cart",
       },
       {
+        heading: "Blockchain",
+        route: "/blockchain",
+        keenthemesIcon: "bitcoin",
+        bootstrapIcon: "bi-currency-bitcoin",
+      },
+      {
         heading: "Profil",
         route: "/profile",
         keenthemesIcon: "profile-circle",

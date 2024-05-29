@@ -29,7 +29,7 @@
       >
         <!--begin:Menu link-->
         <span class="menu-link">
-          <span class="menu-title">Help</span>
+          <span class="menu-title">Dezvoltatori</span>
           <span class="menu-arrow d-lg-none"></span>
         </span>
         <!--end:Menu link-->
