@@ -1,82 +1,5 @@
 <template>
-  <!--begin::Card-->
   <div class="card">
-    <!--begin::Card header-->
-    <div class="card-header border-0 pt-6">
-      <!--begin::Card title-->
-      <div class="card-title">
-        <!--begin::Search-->
-        <div class="d-flex align-items-center position-relative my-1">
-          <KTIcon
-            icon-name="magnifier"
-            icon-class="fs-1 position-absolute ms-6"
-          />
-          <input
-            v-model="search"
-            @input="searchItems()"
-            type="text"
-            data-kt-subscription-table-filter="search"
-            class="form-control form-control-solid w-250px ps-14"
-            placeholder="Search Subscriptions"
-          />
-        </div>
-        <!--end::Search-->
-      </div>
-      <!--begin::Card title-->
-
-      <!--begin::Card toolbar-->
-      <div class="card-toolbar">
-        <!--begin::Toolbar-->
-        <div
-          v-if="selectedIds.length === 0"
-          class="d-flex justify-content-end"
-          data-kt-subscription-table-toolbar="base"
-        >
-          <!--begin::Export-->
-          <button
-            type="button"
-            class="btn btn-light-primary me-3"
-            data-bs-toggle="modal"
-            data-bs-target="#kt_subscriptions_export_modal"
-          >
-            <KTIcon icon-name="exit-up" icon-class="fs-2" />
-            Export
-          </button>
-          <!--end::Export-->
-
-          <!--begin::Add subscription-->
-          <router-link
-            to="/apps/subscriptions/add-subscription"
-            class="btn btn-primary"
-          >
-            <KTIcon icon-name="plus" icon-class="fs-2" />
-            Add Subscription
-          </router-link>
-          <!--end::Add subscription-->
-        </div>
-        <!--end::Toolbar-->
-
-        <!--begin::Group actions-->
-        <div v-else class="d-flex justify-content-end align-items-center">
-          <div class="fw-bold me-5">
-            <span class="me-2">{{ selectedIds.length }}</span
-            >Selected
-          </div>
-          <button
-            type="button"
-            class="btn btn-danger"
-            @click="deleteFewSubscriptions()"
-          >
-            Delete Selected
-          </button>
-        </div>
-        <!--end::Group actions-->
-      </div>
-      <!--end::Card toolbar-->
-    </div>
-    <!--end::Card header-->
-
-    <!--begin::Card body-->
     <div class="card-body pt-0">
       <KTDatatable
         @on-sort="sort"
@@ -86,31 +9,32 @@
         :header="headerConfig"
         :checkbox-enabled="true"
       >
-        <template v-slot:customer="{ row: vm }">
+        <template v-slot:vmname="{ row: subscription }">
           <router-link
             to="/apps/subscriptions/view-subscription"
+            href=""
             class="text-gray-800 text-hover-primary mb-1"
           >
-            {{ vm.name }}
+            {{ subscription.name }}
           </router-link>
         </template>
-        <template v-slot:status="{ row: vm }">
+        <template v-slot:status="{ row: subscription }">
           <a href="#" class="text-gray-600 text-hover-primary mb-1">
-            <div class="badge badge-light-success">
-              {{ vm.status }}
+            <div :class="`badge badge-light-${getStatusColor(subscription.status)}`">
+              {{ subscription.status }}
             </div>
           </a>
         </template>
-        <template v-slot:billing="{ row: vm }">
-          <div class="badge badge-light">{{ vm.expiresAt }}</div>
+        <template v-slot:node="{ row: subscription }">
+          <div class="badge badge-light">{{ subscription.node }}</div>
         </template>
-        <template v-slot:product="{ row: vm }">
-          {{ vm.companyName }}
+        <template v-slot:userId="{ row: subscription }">
+          {{ subscription.userId }}
         </template>
-        <template v-slot:createdDate="{ row: vm }">
-          {{ vm.createdAt }}
+        <template v-slot:createdDate="{ row: subscription }">
+          {{ formatDate(subscription.createdAt) }}
         </template>
-        <template v-slot:actions="{ row: vm }">
+        <template v-slot:actions="{ row: subscription }">
           <a
             href="#"
             class="btn btn-sm btn-light btn-active-light-primary"
@@ -128,7 +52,7 @@
             <!--begin::Menu item-->
             <div class="menu-item px-3">
               <router-link
-                to="/apps/customers/customer-details"
+                :to="`/apps/subscriptions/view-subscription/${subscription._id}`"
                 class="menu-link px-3"
                 >View</router-link
               >
@@ -136,7 +60,7 @@
             <!--end::Menu item-->
             <!--begin::Menu item-->
             <div class="menu-item px-3">
-              <a @click="deleteSubscription(vm._id)" class="menu-link px-3"
+              <a @click.prevent="deleteSubscription(subscription._id)" class="menu-link px-3"
                 >Delete</a
               >
             </div>
@@ -146,27 +70,32 @@
         </template>
       </KTDatatable>
     </div>
-    <!--end::Card body-->
   </div>
-  <!--end::Card-->
 </template>
 
 <script lang="ts">
-import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, onMounted, ref } from "vue";
 import KTDatatable from "@/components/kt-datatable/KTDataTable.vue";
 import type { Sort } from "@/components/kt-datatable/table-partials/models";
 import arraySort from "array-sort";
 import { MenuComponent } from "@/assets/ts/components";
-import axios from 'axios';
+import axios from "@/plugins/axios";
 
-interface IVM {
+interface ISubscription {
   _id: string;
+  vmid: number;
+  userId: string;
   name: string;
-  status: string;
-  expiresAt: string;
+  node: string;
+  storage: string;
+  memory: number;
+  cores: number;
+  diskSize: number;
   companyName: string;
+  expiresAt: string;
+  status: string;
   createdAt: string;
+  __v: number;
 }
 
 export default defineComponent({
@@ -175,11 +104,12 @@ export default defineComponent({
     KTDatatable,
   },
   setup() {
-    const data = ref<Array<IVM>>([]);
+    const data = ref<Array<ISubscription>>([]);
+    const initData = ref<Array<ISubscription>>([]);
     const headerConfig = ref([
       {
-        columnName: "Customer",
-        columnLabel: "name",
+        columnName: "VM Name",
+        columnLabel: "vmname",
         sortEnabled: true,
       },
       {
@@ -188,18 +118,18 @@ export default defineComponent({
         sortEnabled: true,
       },
       {
-        columnName: "Billing",
-        columnLabel: "expiresAt",
+        columnName: "Node",
+        columnLabel: "node",
         sortEnabled: true,
       },
       {
-        columnName: "Product",
-        columnLabel: "companyName",
+        columnName: "userId",
+        columnLabel: "userId",
         sortEnabled: true,
       },
       {
         columnName: "Created Date",
-        columnLabel: "createdAt",
+        columnLabel: "createdDate",
         sortEnabled: true,
       },
       {
@@ -208,55 +138,93 @@ export default defineComponent({
       },
     ]);
 
+    onMounted(async () => {
+      await fetchSubscriptions();
+    });
+
     const selectedIds = ref<Array<string>>([]);
+
     const deleteFewSubscriptions = () => {
-      selectedIds.value.forEach((item) => {
-        deleteSubscription(item);
+      selectedIds.value.forEach((id) => {
+        deleteSubscription(id);
       });
       selectedIds.value.length = 0;
     };
+
     const deleteSubscription = async (id: string) => {
       try {
-        await axios.delete(`/api/vms/${id}`);
-        data.value = data.value.filter(vm => vm._id !== id);
+        await axios.delete(`/vms/${id}`);
+        data.value = data.value.filter((subscription) => subscription._id !== id);
       } catch (error) {
-        console.error('Failed to delete subscription:', error);
+        console.error("Failed to delete subscription:", error);
       }
     };
+
     const sort = (sort: Sort) => {
       const reverse: boolean = sort.order === "asc";
       if (sort.label) {
         arraySort(data.value, sort.label, { reverse });
       }
     };
+
     const onItemSelect = (selectedItems: Array<string>) => {
       selectedIds.value = selectedItems;
     };
 
     const search = ref<string>("");
+
     const searchItems = () => {
+      data.value = [...initData.value];
       if (search.value !== "") {
-        data.value = data.value.filter(vm => 
-          vm.name.toLowerCase().includes(search.value.toLowerCase())
+        const results = data.value.filter((subscription) =>
+          Object.values(subscription).some(
+            (value) =>
+              typeof value === "string" &&
+              value.toLowerCase().includes(search.value.toLowerCase())
+          )
         );
-      } else {
-        fetchVMs();
+        data.value = [...results];
       }
       MenuComponent.reinitialization();
     };
 
-    const fetchVMs = async () => {
+    const fetchSubscriptions = async () => {
       try {
-        const response = await axios.get('/api/vms');
+        const response = await axios.get("/vms");
         data.value = response.data;
+        initData.value = [...response.data];
       } catch (error) {
-        console.error('Failed to fetch VMs:', error);
+        console.error("Failed to fetch subscriptions:", error);
       }
     };
 
-    onMounted(() => {
-      fetchVMs();
-    });
+    const formatDate = (dateString: string): string => {
+      const options: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
+    const getStatusColor = (status: string): string => {
+      switch (status) {
+        case "created":
+          return "success";
+        case "pending":
+          return "warning";
+        case "failed":
+          return "danger";
+        default:
+          return "light";
+      }
+    };
+
+    const onItemsPerPageChange = () => {
+      setTimeout(() => {
+        MenuComponent.reinitialization();
+      }, 0);
+    };
 
     return {
       search,
@@ -268,33 +236,11 @@ export default defineComponent({
       selectedIds,
       deleteFewSubscriptions,
       deleteSubscription,
-      getAssetPath,
-      onItemsPerPageChange: () => {
-        setTimeout(() => {
-          MenuComponent.reinitialization();
-        }, 0);
-      },
+      formatDate,
+      getStatusColor,
+      onItemsPerPageChange,
+      fetchSubscriptions,
     };
   },
 });
 </script>
-
-<style scoped>
-.app-catalog {
-  padding: 20px;
-}
-.filters {
-  margin-bottom: 20px;
-}
-.app-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-.app-card {
-  border: 1px solid #ddd;
-  padding: 20px;
-  width: 200px;
-  text-align: center;
-}
-</style>
