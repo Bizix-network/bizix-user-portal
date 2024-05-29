@@ -1238,7 +1238,7 @@
           <div id="kt_signin_email" :class="{ 'd-none': emailFormDisplay }">
             <div class="fs-4 fw-bolder mb-1">Email Address</div>
             <div class="fs-6 fw-semibold text-gray-600">
-              support@keenthemes.com
+              support@bizix.ro
             </div>
           </div>
 
@@ -1269,7 +1269,7 @@
                       id="emailaddress"
                       placeholder="Email Address"
                       name="emailaddress"
-                      value="support@keenthemes.com"
+                      value="support@bizix.ro"
                     />
                     <div class="fv-plugins-message-container">
                       <div class="fv-help-block">
@@ -2326,7 +2326,7 @@ export default defineComponent({
       surname: "Smith",
       company: "Keenthemes",
       contactPhone: "044 3276 454 935",
-      companySite: "keenthemes.com",
+      companySite: "bizix.ro",
       country: "MY",
       language: "msa",
       timezone: "Kuala Lumpur",

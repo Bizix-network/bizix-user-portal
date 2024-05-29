@@ -310,7 +310,7 @@
                   >{{ " " }}
                   <a
                     class="fw-semibold"
-                    href="https://preview.keenthemes.com/html/bizix/docs/icons/keenicons"
+                    href="https://preview.bizix.ro/html/bizix/docs/icons/keenicons"
                     target="_blank"
                     >Learn more</a
                   >

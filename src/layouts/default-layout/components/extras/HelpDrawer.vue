@@ -51,8 +51,8 @@
             <!--begin::Heading-->
             <h2 class="fw-bold mb-5">
               Support at
-              <a href="https://devs.keenthemes.com" class=""
-                >devs.keenthemes.com</a
+              <a href="https://devs.bizix.ro" class=""
+                >devs.bizix.ro</a
               >
             </h2>
             <!--end::Heading-->
@@ -64,14 +64,14 @@
               >
               <a
                 class="explore-link d-none"
-                href="https://keenthemes.com/licensing"
+                href="https://bizix.ro/licensing"
                 >FAQs</a
               >
             </div>
             <!--end::Description-->
             <!--begin::Link-->
             <a
-              href="https://devs.keenthemes.com"
+              href="https://devs.bizix.ro"
               class="btn btn-lg explore-btn-primary w-100"
               >Get Support</a
             >
@@ -96,7 +96,7 @@
               <div class="d-flex flex-column me-2 me-lg-5">
                 <!--begin::Title-->
                 <a
-                  href="https://preview.keenthemes.com/bizix8/vue/docs/getting-started/build"
+                  href="https://preview.bizix.ro/bizix8/vue/docs/getting-started/build"
                   class="text-gray-900 text-hover-primary fw-bold fs-6 fs-lg-4 mb-1"
                   >Documentation &amp; Videos</a
                 >
@@ -132,7 +132,7 @@
               <div class="d-flex flex-column me-2 me-lg-5">
                 <!--begin::Title-->
                 <a
-                  href="https://preview.keenthemes.com/bizix8/vue/docs/base/utilities"
+                  href="https://preview.bizix.ro/bizix8/vue/docs/base/utilities"
                   class="text-gray-900 text-hover-primary fw-bold fs-6 fs-lg-4 mb-1"
                   >Plugins &amp; Components</a
                 >
@@ -203,7 +203,7 @@
               <div class="d-flex flex-column me-2 me-lg-5">
                 <!--begin::Title-->
                 <a
-                  href="https://preview.keenthemes.com/bizix8/vue/docs/getting-started/changelog"
+                  href="https://preview.bizix.ro/bizix8/vue/docs/getting-started/changelog"
                   class="text-gray-900 text-hover-primary fw-bold fs-6 fs-lg-4 mb-1"
                   >What's New</a
                 >

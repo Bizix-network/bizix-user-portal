@@ -162,7 +162,7 @@
           <!--begin:Menu link-->
           <a
             class="menu-link"
-            href="https://preview.keenthemes.com/bizix8/vue/docs/base/utilities"
+            href="https://preview.bizix.ro/bizix8/vue/docs/base/utilities"
           >
             <span class="menu-icon">
               <i
@@ -184,7 +184,7 @@
           <!--begin:Menu link-->
           <a
             class="menu-link"
-            href="https://preview.keenthemes.com/bizix8/vue/docs/index"
+            href="https://preview.bizix.ro/bizix8/vue/docs/index"
           >
             <span class="menu-icon">
               <i
@@ -207,7 +207,7 @@
           <!--begin:Menu link-->
           <a
             class="menu-link"
-            href="https://preview.keenthemes.com/bizix8/vue/docs/getting-started/changelog"
+            href="https://preview.bizix.ro/bizix8/vue/docs/getting-started/changelog"
           >
             <span class="menu-icon">
               <i

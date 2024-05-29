@@ -42,7 +42,7 @@
             <!--begin:Menu link-->
             <a
               class="menu-link"
-              href="https://preview.keenthemes.com/bizix8/vue/docs/base/utilities"
+              href="https://preview.bizix.ro/bizix8/vue/docs/base/utilities"
               title="Check out over 200 in-house components, plugins and ready for use solutions"
               data-bs-toggle="tooltip"
               data-bs-trigger="hover"
@@ -62,7 +62,7 @@
             <!--begin:Menu link-->
             <a
               class="menu-link"
-              href="https://preview.keenthemes.com/bizix8/vue/docs/index"
+              href="https://preview.bizix.ro/bizix8/vue/docs/index"
               title="Check out the complete documentation"
               data-bs-toggle="tooltip"
               data-bs-trigger="hover"
@@ -82,7 +82,7 @@
             <!--begin:Menu link-->
             <a
               class="menu-link"
-              href="https://preview.keenthemes.com/bizix8/vue/docs/getting-started/changelog"
+              href="https://preview.bizix.ro/bizix8/vue/docs/getting-started/changelog"
             >
               <span class="menu-icon">
                 <KTIcon icon-name="code" icon-class="fs-3" />

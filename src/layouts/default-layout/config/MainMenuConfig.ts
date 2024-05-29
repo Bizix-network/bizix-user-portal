@@ -12,13 +12,13 @@ const MainMenuConfig: Array<MenuItem> = [
       {
         heading: "Catalog Aplicații",
         route: "/catalog",
-        keenthemesIcon: "apps",
+        keenthemesIcon: "book-square",
         bootstrapIcon: "bi-list",
       },
       {
         heading: "Abonamente",
         route: "/subscriptions",
-        keenthemesIcon: "basket",
+        keenthemesIcon: "colors-square",
         bootstrapIcon: "bi-cart",
       },
       {
@@ -40,7 +40,7 @@ const MainMenuConfig: Array<MenuItem> = [
       {
         heading: "Suport",
         route: "/support",
-        keenthemesIcon: "help",
+        keenthemesIcon: "question",
         bootstrapIcon: "bi-question-circle",
       },
     ],
