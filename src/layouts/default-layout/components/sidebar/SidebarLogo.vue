@@ -10,7 +10,7 @@
         "
         alt="Logo"
         :src="getAssetPath('media/logos/default-dark.svg')"
-        class="h-25px app-sidebar-logo-default"
+        class="h-60px app-sidebar-logo-default"
       />
       <img
         v-if="themeMode === 'light' && layout === 'light-sidebar'"
