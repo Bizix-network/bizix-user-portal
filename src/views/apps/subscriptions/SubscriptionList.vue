@@ -11,8 +11,7 @@
       >
         <template v-slot:vmname="{ row: subscription }">
           <router-link
-            to="/apps/subscriptions/view-subscription"
-            href=""
+            :to="`/apps/subscriptions/view-subscription/${subscription._id}`"
             class="text-gray-800 text-hover-primary mb-1"
           >
             {{ subscription.name }}
@@ -34,6 +33,12 @@
         <template v-slot:createdDate="{ row: subscription }">
           {{ formatDate(subscription.createdAt) }}
         </template>
+        <template v-slot:publicURL="{ row: subscription }">
+          <a :href="subscription.publicURL" target="_blank">{{ subscription.publicURL }}</a>
+        </template>
+        <template v-slot:templateId="{ row: subscription }">
+          {{ subscription.templateId }}
+        </template>
         <template v-slot:actions="{ row: subscription }">
           <a
             href="#"
@@ -41,7 +46,7 @@
             data-kt-menu-trigger="click"
             data-kt-menu-placement="bottom-end"
             data-kt-menu-flip="top-end"
-            >Actions
+          >Actions
             <KTIcon icon-name="down" icon-class="fs-5 m-0" />
           </a>
           <!--begin::Menu-->
@@ -54,15 +59,13 @@
               <router-link
                 :to="`/apps/subscriptions/view-subscription/${subscription._id}`"
                 class="menu-link px-3"
-                >View</router-link
-              >
+              >View</router-link>
             </div>
             <!--end::Menu item-->
             <!--begin::Menu item-->
             <div class="menu-item px-3">
               <a @click.prevent="deleteSubscription(subscription._id)" class="menu-link px-3"
-                >Delete</a
-              >
+              >Delete</a>
             </div>
             <!--end::Menu item-->
           </div>
@@ -87,10 +90,8 @@ interface ISubscription {
   userId: string;
   name: string;
   node: string;
-  storage: string;
-  memory: number;
-  cores: number;
-  diskSize: number;
+  publicURL: string;
+  templateId: string;
   companyName: string;
   expiresAt: string;
   status: string;
@@ -128,11 +129,21 @@ export default defineComponent({
         sortEnabled: true,
       },
       {
+        columnName: "Application ID",
+        columnLabel: "templateId",
+        sortEnabled: true,
+      },
+      {
         columnName: "Created Date",
         columnLabel: "createdDate",
         sortEnabled: true,
       },
       {
+        columnName: "Public URL",
+        columnLabel: "publicURL",
+        sortEnabled: true,
+      },
+        {
         columnName: "Actions",
         columnLabel: "actions",
       },

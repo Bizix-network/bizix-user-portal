@@ -15,21 +15,35 @@
         <h2>{{ app.templateName }}</h2>
         <p>{{ app.version }}</p>
         <router-link :to="`/app/${app._id}`">Detalii</router-link>
+        <button @click="openOrderModal(app)">Order</button>
       </div>
     </div>
+    <!-- Inclus modalul -->
+    <order-modal 
+      v-if="showOrderModal" 
+      :app="selectedApp" 
+      @close="showOrderModal = false"
+      @submit="handleOrderSubmit"
+    />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import OrderModal from './OrderModal.vue'; // Importă componenta modal
 
 export default {
+  components: {
+    OrderModal, // Înregistrează componenta modal
+  },
   data() {
     return {
       searchQuery: '',
       selectedCategory: '',
       categories: ['CRM', 'ERP', 'Project Management', 'HR', 'Finance'],
       apps: [], // Inițial gol
+      showOrderModal: false, // Control pentru afișarea modalului
+      selectedApp: null, // Aplicația selectată pentru comandă
     };
   },
   computed: {
@@ -55,6 +69,19 @@ export default {
         }));
       } catch (error) {
         console.error('Eroare la preluarea template-urilor:', error);
+      }
+    },
+    openOrderModal(app) {
+      this.selectedApp = app;
+      this.showOrderModal = true;
+    },
+    async handleOrderSubmit(orderDetails) {
+      try {
+        await axios.post('/api/orders', orderDetails);
+        alert('Comanda a fost inițiată cu succes!');
+        this.showOrderModal = false;
+      } catch (error) {
+        console.error('Eroare la inițierea comenzii:', error);
       }
     },
   },
