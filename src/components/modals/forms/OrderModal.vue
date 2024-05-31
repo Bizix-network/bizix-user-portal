@@ -1,452 +1,347 @@
 <template>
-    <div
-      class="modal fade"
-      id="modal_new_order"
-      ref="orderModalRef"
-      tabindex="-1"
-      aria-hidden="true"
-    >
-      <!--begin::Modal dialog-->
-      <div class="modal-dialog modal-dialog-centered mw-650px">
-        <!--begin::Modal content-->
-        <div class="modal-content">
-          <!--begin::Modal header-->
-          <div class="modal-header" id="modal_new_order_header">
-            <!--begin::Modal title-->
-            <h2 class="fw-bold">Add a Customer</h2>
-            <!--end::Modal title-->
-  
-            <!--begin::Close-->
-            <div
-              id="modal_new_order_close"
-              data-bs-dismiss="modal"
-              class="btn btn-icon btn-sm btn-active-icon-primary"
-            >
-              <KTIcon icon-name="cross" icon-class="fs-1" />
-            </div>
-            <!--end::Close-->
+  <div class="modal fade" id="modal_new_order" ref="addCustomerModalRef" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mw-650px">
+      <div class="modal-content">
+        <div class="modal-header" id="modal_new_order_header">
+          <h2 class="fw-bold">Plasează o comandă</h2>
+          <div id="modal_new_order_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary">
+            <span class="svg-icon svg-icon-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+              </svg>
+            </span>
           </div>
-          <!--end::Modal header-->
-          <!--begin::Form-->
-          <el-form
-            @submit.prevent="submit()"
-            :model="formData"
-            :rules="rules"
-            ref="formRef"
-          >
-            <!--begin::Modal body-->
-            <div class="modal-body py-10 px-lg-17">
-              <!--begin::Scroll-->
-              <div
-                class="scroll-y me-n7 pe-7"
-                id="modal_new_order_scroll"
-                data-kt-scroll="true"
-                data-kt-scroll-activate="{default: false, lg: true}"
-                data-kt-scroll-max-height="auto"
-                data-kt-scroll-dependencies="#modal_new_order_header"
-                data-kt-scroll-wrappers="#modal_new_order_scroll"
-                data-kt-scroll-offset="300px"
-              >
-                <!--begin::Input group-->
-                <div class="fv-row mb-7">
-                  <!--begin::Label-->
-                  <label class="required fs-6 fw-semibold mb-2">Name</label>
-                  <!--end::Label-->
-  
-                  <!--begin::Input-->
-                  <el-form-item prop="name">
-                    <el-input
-                      v-model="formData.name"
-                      type="text"
-                      placeholder=""
-                    />
-                  </el-form-item>
-                  <!--end::Input-->
-                </div>
-                <!--end::Input group-->
-  
-                <!--begin::Input group-->
-                <div class="fv-row mb-7">
-                  <!--begin::Label-->
-                  <label class="fs-6 fw-semibold mb-2">
-                    <span class="required">Email</span>
-  
-                    <i
-                      class="fas fa-exclamation-circle ms-1 fs-7"
-                      data-bs-toggle="tooltip"
-                      title="Email address must be active"
-                    ></i>
-                  </label>
-                  <!--end::Label-->
-  
-                  <!--begin::Input-->
-                  <el-form-item prop="email">
-                    <el-input v-model="formData.email" />
-                  </el-form-item>
-                  <!--end::Input-->
-                </div>
-                <!--end::Input group-->
-  
-                <!--begin::Input group-->
-                <div class="fv-row mb-15">
-                  <!--begin::Label-->
-                  <label class="fs-6 fw-semibold mb-2">Description</label>
-                  <!--end::Label-->
-  
-                  <!--begin::Input-->
-                  <el-form-item prop="description">
-                    <el-input v-model="formData.description" type="text" />
-                  </el-form-item>
-                  <!--end::Input-->
-                </div>
-                <!--end::Input group-->
-  
-                <!--begin::Billing toggle-->
-                <div
-                  class="fw-bold fs-3 rotate collapsible mb-7"
-                  data-bs-toggle="collapse"
-                  href="#modal_new_order_billing_info"
-                  role="button"
-                  aria-expanded="false"
-                  aria-controls="kt_customer_view_details"
-                >
-                  Shipping Information
-                  <span class="ms-2 rotate-180">
-                    <KTIcon icon-name="down" icon-class="fs-3" />
-                  </span>
-                </div>
-                <!--end::Billing toggle-->
-  
-                <!--begin::Billing form-->
-                <div
-                  id="modal_new_order_billing_info"
-                  class="collapse show"
-                >
-                  <!--begin::Input group-->
-                  <div class="d-flex flex-column mb-7 fv-row">
-                    <!--begin::Label-->
-                    <label class="required fs-6 fw-semibold mb-2"
-                      >Address Line 1</label
-                    >
-                    <!--end::Label-->
-  
-                    <!--begin::Input-->
-                    <el-form-item prop="addressLine">
-                      <el-input v-model="formData.addressLine" />
-                    </el-form-item>
-                    <!--end::Input-->
-                  </div>
-                  <!--end::Input group-->
-  
-                  <!--begin::Input group-->
-                  <div class="d-flex flex-column mb-7 fv-row">
-                    <!--begin::Label-->
-                    <label class="fs-6 fw-semibold mb-2">Address Line 2</label>
-                    <!--end::Label-->
-  
-                    <!--begin::Input-->
-                    <el-input v-model="formData.addressLine2" />
-                    <!--end::Input-->
-                  </div>
-                  <!--end::Input group-->
-  
-                  <!--begin::Input group-->
-                  <div class="d-flex flex-column mb-7 fv-row">
-                    <!--begin::Label-->
-                    <label class="required fs-6 fw-semibold mb-2">Town</label>
-                    <!--end::Label-->
-  
-                    <!--begin::Input-->
-                    <el-form-item prop="town">
-                      <el-input v-model="formData.town" />
-                    </el-form-item>
-                    <!--end::Input-->
-                  </div>
-                  <!--end::Input group-->
-  
-                  <!--begin::Input group-->
-                  <div class="row g-9 mb-7">
-                    <!--begin::Col-->
-                    <div class="col-md-6 fv-row">
-                      <!--begin::Label-->
-                      <label class="required fs-6 fw-semibold mb-2"
-                        >State / Province</label
-                      >
-                      <!--end::Label-->
-  
-                      <!--begin::Input-->
-                      <el-form-item prop="state">
-                        <el-input v-model="formData.state" />
-                      </el-form-item>
-                      <!--end::Input-->
-                    </div>
-                    <!--end::Col-->
-  
-                    <!--begin::Col-->
-                    <div class="col-md-6 fv-row">
-                      <!--begin::Label-->
-                      <label class="required fs-6 fw-semibold mb-2"
-                        >Post Code</label
-                      >
-                      <!--end::Label-->
-  
-                      <!--begin::Input-->
-                      <el-form-item prop="postCode">
-                        <el-input v-model="formData.postCode" />
-                      </el-form-item>
-                      <!--end::Input-->
-                    </div>
-                    <!--end::Col-->
-                  </div>
-                  <!--end::Input group-->
-  
-                  <!--begin::Input group-->
-                  <div class="d-flex flex-column mb-7 fv-row">
-                    <!--begin::Label-->
-                    <label class="fs-6 fw-semibold mb-2">
-                      <span class="required">Country</span>
-  
-                      <i
-                        class="fas fa-exclamation-circle ms-1 fs-7"
-                        data-bs-toggle="tooltip"
-                        title="Country of origination"
-                      ></i>
-                    </label>
-                    <!--end::Label-->
-  
-                    <!--begin::Input-->
-                    <el-select v-model="formData.country">
-                      <el-option value="">Select a Country...</el-option>
-                      <el-option
-                        v-for="(item, i) in countries"
-                        :key="`countries-select-option-${i}`"
-                        :value="item.code"
-                      >
-                        {{ item.name }}
-                      </el-option>
-                    </el-select>
-                    <!--end::Input-->
-                  </div>
-                  <!--end::Input group-->
-  
-                  <!--begin::Input group-->
-                  <div class="fv-row mb-7">
-                    <!--begin::Wrapper-->
-                    <div class="d-flex flex-stack">
-                      <!--begin::Label-->
-                      <div class="me-5">
-                        <!--begin::Label-->
-                        <label class="fs-6 fw-semibold"
-                          >Use as a billing adderess?</label
-                        >
-                        <!--end::Label-->
-  
-                        <!--begin::Input-->
-                        <div class="fs-7 fw-semibold text-muted">
-                          If you need more info, please check budget planning
-                        </div>
-                        <!--end::Input-->
-                      </div>
-                      <!--end::Label-->
-  
-                      <!--begin::Switch-->
-                      <label
-                        class="form-check form-switch form-check-custom form-check-solid"
-                      >
-                        <!--begin::Input-->
-                        <input
-                          class="form-check-input"
-                          name="billing"
-                          type="checkbox"
-                          value="1"
-                          id="modal_new_order_billing"
-                          checked
-                        />
-                        <!--end::Input-->
-  
-                        <!--begin::Label-->
-                        <span
-                          class="form-check-label fw-semibold text-muted"
-                          for="modal_new_order_billing"
-                        >
-                          Yes
-                        </span>
-                        <!--end::Label-->
-                      </label>
-                      <!--end::Switch-->
-                    </div>
-                    <!--begin::Wrapper-->
-                  </div>
-                  <!--end::Input group-->
-                </div>
-                <!--end::Billing form-->
-              </div>
-              <!--end::Scroll-->
-            </div>
-            <!--end::Modal body-->
-  
-            <!--begin::Modal footer-->
-            <div class="modal-footer flex-center">
-              <!--begin::Button-->
-              <button
-                type="reset"
-                id="modal_new_order_cancel"
-                class="btn btn-light me-3"
-              >
-                Discard
-              </button>
-              <!--end::Button-->
-  
-              <!--begin::Button-->
-              <button
-                :data-kt-indicator="loading ? 'on' : null"
-                class="btn btn-lg btn-primary"
-                type="submit"
-              >
-                <span v-if="!loading" class="indicator-label">
-                  Submit
-                  <KTIcon icon-name="arrow-right" icon-class="fs-2 me-2 me-0" />
-                </span>
-                <span v-if="loading" class="indicator-progress">
-                  Please wait...
-                  <span
-                    class="spinner-border spinner-border-sm align-middle ms-2"
-                  ></span>
-                </span>
-              </button>
-              <!--end::Button-->
-            </div>
-            <!--end::Modal footer-->
-          </el-form>
-          <!--end::Form-->
         </div>
+        <el-form @submit.prevent="submit()" :model="formData" :rules="rules" ref="formRef">
+          <div class="modal-body py-10 px-lg-17">
+            <div class="scroll-y me-n7 pe-7" id="modal_new_order_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_new_order_header" data-kt-scroll-wrappers="#modal_new_order_scroll" data-kt-scroll-offset="300px">
+              <div v-if="selectedApp" class="mb-8">
+  <h3>Rezumat comandă</h3>
+  <p><strong>Nume template:</strong> {{ selectedApp.templateName }}</p>
+  <p><strong>Versiune:</strong> {{ selectedApp.version }}</p>
+</div>
+              <div class="mb-8">
+                <h3>Detalii facturare</h3>
+                <el-form-item label="Nume companie" prop="companyName">
+                  <el-input v-model="formData.companyName" />
+                </el-form-item>
+                <el-form-item label="CUI" prop="companyID">
+                  <el-input v-model="formData.companyID" />
+                </el-form-item>
+                <el-form-item label="Prenume" prop="firstName">
+                  <el-input v-model="formData.firstName" />
+                </el-form-item>
+                <el-form-item label="Nume" prop="lastName">
+                  <el-input v-model="formData.lastName" />
+                </el-form-item>
+                <el-form-item label="Adresă" prop="address">
+                  <el-input v-model="formData.address" />
+                </el-form-item>
+                <el-form-item label="Oraș" prop="city">
+                  <el-input v-model="formData.city" />
+                </el-form-item>
+                <el-form-item label="Județ" prop="state">
+                  <el-input v-model="formData.state" />
+                </el-form-item>
+                <el-form-item label="Cod poștal" prop="zip">
+                  <el-input v-model="formData.zip" />
+                </el-form-item>
+                <el-form-item label="Țară" prop="country">
+                  <el-input v-model="formData.country" />
+                </el-form-item>
+                <el-form-item label="Telefon" prop="phone">
+                  <el-input v-model="formData.phone" />
+                </el-form-item>
+                <el-form-item label="Moneda" prop="currency">
+                  <el-input v-model="formData.currency" />
+                </el-form-item>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer flex-center">
+            <button type="reset" id="modal_new_order_cancel" class="btn btn-light me-3" data-bs-dismiss="modal">Renunță</button>
+            <button :data-kt-indicator="loading ? 'on' : null" class="btn btn-lg btn-primary" type="submit">
+              <span v-if="!loading" class="indicator-label">
+                Plasează comanda
+                <span class="svg-icon svg-icon-3 ms-2 me-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1" transform="rotate(-180 18 13)" fill="black" />
+                    <path d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z" fill="black" />
+                  </svg>
+                </span>
+              </span>
+              <span v-if="loading" class="indicator-progress">
+                Se procesează...
+                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+              </span>
+            </button>
+          </div>
+        </el-form>
       </div>
     </div>
-  </template>
+  </div>
+</template>
   
-  <script lang="ts">
-  import { getAssetPath } from "@/core/helpers/assets";
-  import { defineComponent, ref } from "vue";
-  import { hideModal } from "@/core/helpers/modal";
-  import { countries } from "@/core/data/countries";
-  import Swal from "sweetalert2/dist/sweetalert2.js";
-  
-  export default defineComponent({
-    name: "add-customer-modal",
-    components: {},
-    setup() {
-      const formRef = ref<null | HTMLFormElement>(null);
-      const orderModalRef = ref<null | HTMLElement>(null);
-      const loading = ref<boolean>(false);
-      const formData = ref({
-        name: "Sean Bean",
-        email: "sean@dellito.com",
-        description: "",
-        addressLine: "101, Collins Street",
-        addressLine2: "",
-        town: "Melbourne",
-        state: "Victoria",
-        postCode: "3000",
-        country: "US",
-      });
-  
-      const rules = ref({
-        name: [
-          {
-            required: true,
-            message: "Customer name is required",
-            trigger: "change",
-          },
-        ],
-        email: [
-          {
-            required: true,
-            message: "Customer email is required",
-            trigger: "change",
-          },
-        ],
-        addressLine: [
-          {
-            required: true,
-            message: "Address 1 is required",
-            trigger: "change",
-          },
-        ],
-        town: [
-          {
-            required: true,
-            message: "Town is required",
-            trigger: "change",
-          },
-        ],
-        state: [
-          {
-            required: true,
-            message: "State is required",
-            trigger: "change",
-          },
-        ],
-        postCode: [
-          {
-            required: true,
-            message: "Post code is required",
-            trigger: "change",
-          },
-        ],
-      });
-  
-      const submit = () => {
-        if (!formRef.value) {
-          return;
-        }
-  
-        formRef.value.validate((valid: boolean) => {
-          if (valid) {
-            loading.value = true;
-  
-            setTimeout(() => {
-              loading.value = false;
-  
-              Swal.fire({
-                text: "Form has been successfully submitted!",
-                icon: "success",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                heightAuto: false,
-                customClass: {
-                  confirmButton: "btn btn-primary",
-                },
-              }).then(() => {
-                hideModal(orderModalRef.value);
-              });
-            }, 2000);
-          } else {
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import { hideModal } from "@/core/helpers/modal";
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import axios from "@/plugins/axios";
+
+interface FormData {
+  companyName: string;
+  companyID: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  phone: string;
+  currency: string;
+}
+
+export default defineComponent({
+  name: 'order-modal',
+  props: {
+    selectedAppId: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
+    const formRef = ref<null | HTMLFormElement>(null);
+    const addCustomerModalRef = ref<null | HTMLElement>(null);
+    const loading = ref<boolean>(false);
+    const formData = ref<FormData>({
+      companyName: '',
+      companyID: '',
+      firstName: '',
+      lastName: '',
+      address: '',
+      city: '',
+      state: '',
+      zip: '',
+      country: '',
+      phone: '',
+      currency: '',
+    });
+    const selectedApp = ref<any>(null);
+
+    const rules = ref({
+      companyName: [
+        {
+          required: true,
+          message: 'Numele companiei este obligatoriu',
+          trigger: 'change',
+        },
+      ],
+      companyID: [
+        {
+          required: true,
+          message: 'CUI-ul este obligatoriu',
+          trigger: 'change',
+        },
+      ],
+      firstName: [
+        {
+          required: true,
+          message: 'Prenumele este obligatoriu',
+          trigger: 'change',
+        },
+      ],
+      lastName: [
+        {
+          required: true,
+          message: 'Numele este obligatoriu',
+          trigger: 'change',
+        },
+      ],
+      address: [
+        {
+          required: true,
+          message: 'Adresa este obligatorie',
+          trigger: 'change',
+        },
+      ],
+      city: [
+        {
+          required: true,
+          message: 'Orașul este obligatoriu',
+          trigger: 'change',
+        },
+      ],
+      state: [
+        {
+          required: true,
+          message: 'Județul este obligatoriu',
+          trigger: 'change',
+        },
+      ],
+      zip: [
+        {
+          required: true,
+          message: 'Codul poștal este obligatoriu',
+          trigger: 'change',
+        },
+      ],
+      country: [
+        {
+          required: true,
+          message: 'Țara este obligatorie',
+          trigger: 'change',
+        },
+      ],
+      phone: [
+        {
+          required: true,
+          message: 'Numărul de telefon este obligatoriu',
+          trigger: 'change',
+        },
+      ],
+      currency: [
+        {
+          required: true,
+          message: 'Moneda este obligatorie',
+          trigger: 'change',
+        },
+      ],
+    });
+
+    onMounted(async () => {
+      await fetchUserProfile();
+      await fetchSelectedApp();
+    });
+
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get('/users/profile');
+        const { billing } = response.data;
+        formData.value = {
+          companyName: billing.companyName || '',
+          companyID: billing.companyID || '',
+          firstName: billing.firstName || '',
+          lastName: billing.lastName || '',
+          address: billing.address || '',
+          city: billing.city || '',
+          state: billing.state || '',
+          zip: billing.zip || '',
+          country: billing.country || '',
+          phone: billing.phone || '',
+          currency: billing.currency || '',
+        };
+      } catch (error) {
+        console.error('Eroare la preluarea profilului utilizatorului:', error);
+      }
+    };
+
+    const fetchSelectedApp = async () => {
+      if (props.selectedAppId) {
+    try {
+      const response = await axios.get(`/api/templates/${props.selectedAppId}`);
+      selectedApp.value = response.data;
+    } catch (error) {
+      console.error('Eroare la preluarea template-ului selectat:', error);
+    }
+  }
+    };
+
+    const submit = async () => {
+      if (!formRef.value) {
+        return;
+      }
+
+      await formRef.value.validate(async (valid: boolean) => {
+        if (valid) {
+          loading.value = true;
+
+          try {
+            const response = await axios.post('/orders/create-order', {
+              userId: 'ID_utilizator_conectat',
+              templateId: props.selectedAppId,
+              billingDetails: {
+                companyName: formData.value.companyName,
+                companyID: formData.value.companyID,
+                firstName: formData.value.firstName,
+                lastName: formData.value.lastName,
+                address: formData.value.address,
+                city: formData.value.city,
+                state: formData.value.state,
+                zip: formData.value.zip,
+                country: formData.value.country,
+                phone: formData.value.phone,
+              },
+              amount: 100,
+              currency: formData.value.currency,
+              node: 'ID_nod_Proxmox',
+              vmName: 'Nume_VM',
+              vmVersion: 'Versiune_VM',
+            });
+
+            if (response.data.url) {
+              window.location.href = response.data.url;
+            } else {
+              throw new Error('Nu s-a primit URL-ul de redirecționare de la server.');
+            }
+
+            loading.value = false;
+
             Swal.fire({
-              text: "Sorry, looks like there are some errors detected, please try again.",
-              icon: "error",
+              text: 'Comanda a fost plasată cu succes!',
+              icon: 'success',
               buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
+              confirmButtonText: 'Ok, am înțeles!',
               heightAuto: false,
               customClass: {
-                confirmButton: "btn btn-primary",
+                confirmButton: 'btn btn-primary',
+              },
+            }).then(() => {
+              hideModal(addCustomerModalRef.value);
+            });
+          } catch (error) {
+            loading.value = false;
+            console.error('Eroare la crearea comenzii:', error);
+            Swal.fire({
+              text: 'Ne pare rău, a apărut o eroare la procesarea comenzii. Vă rugăm încercați din nou.',
+              icon: 'error',
+              buttonsStyling: false,
+              confirmButtonText: 'Ok, am înțeles!',
+              heightAuto: false,
+              customClass: {
+                confirmButton: 'btn btn-primary',
               },
             });
-            return false;
           }
-        });
-      };
-  
-      return {
-        formData,
-        rules,
-        submit,
-        formRef,
-        loading,
-        orderModalRef,
-        getAssetPath,
-        countries,
-      };
-    },
-  });
-  </script>
+        } else {
+          Swal.fire({
+            text: 'Vă rugăm să completați toate câmpurile obligatorii și să încercați din nou.',
+            icon: 'error',
+            buttonsStyling: false,
+            confirmButtonText: 'Ok, am înțeles!',
+            heightAuto: false,
+            customClass: {
+              confirmButton: 'btn btn-primary',
+            },
+          });
+          return false;
+        }
+      });
+    };
+
+    return {
+      formData,
+      rules,
+      submit,
+      formRef,
+      loading,
+      addCustomerModalRef,
+      selectedApp,
+      fetchUserProfile,
+      fetchSelectedApp,
+    };
+  },
+});
+</script>
   
