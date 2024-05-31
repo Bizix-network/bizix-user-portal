@@ -28,23 +28,23 @@
   </div>
 
 
-  <AddCustomerModal></AddCustomerModal>
+  <OrderModal></OrderModal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
+import OrderModal from "@/components/modals/forms/OrderModal.vue";
 import { getIllustrationsPath } from "@/core/helpers/assets";
 import axios from 'axios';
 
 export default defineComponent({
   name: "getting-started",
   components: {
-    AddCustomerModal,
+    OrderModal,
   },
   setup() {
     return {
-      getIllustrationsPath, // Presupunând că ai nevoie de asta în continuare
+      getIllustrationsPath,
     };
   },
   data() {
