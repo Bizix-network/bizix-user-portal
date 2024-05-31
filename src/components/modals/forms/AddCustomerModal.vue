@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal fade"
-    id="kt_modal_add_customer"
+    id="modal_new_order"
     ref="addCustomerModalRef"
     tabindex="-1"
     aria-hidden="true"
@@ -11,14 +11,14 @@
       <!--begin::Modal content-->
       <div class="modal-content">
         <!--begin::Modal header-->
-        <div class="modal-header" id="kt_modal_add_customer_header">
+        <div class="modal-header" id="modal_new_order_header">
           <!--begin::Modal title-->
           <h2 class="fw-bold">Add a Customer</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
           <div
-            id="kt_modal_add_customer_close"
+            id="modal_new_order_close"
             data-bs-dismiss="modal"
             class="btn btn-icon btn-sm btn-active-icon-primary"
           >
@@ -39,12 +39,12 @@
             <!--begin::Scroll-->
             <div
               class="scroll-y me-n7 pe-7"
-              id="kt_modal_add_customer_scroll"
+              id="modal_new_order_scroll"
               data-kt-scroll="true"
               data-kt-scroll-activate="{default: false, lg: true}"
               data-kt-scroll-max-height="auto"
-              data-kt-scroll-dependencies="#kt_modal_add_customer_header"
-              data-kt-scroll-wrappers="#kt_modal_add_customer_scroll"
+              data-kt-scroll-dependencies="#modal_new_order_header"
+              data-kt-scroll-wrappers="#modal_new_order_scroll"
               data-kt-scroll-offset="300px"
             >
               <!--begin::Input group-->
@@ -105,7 +105,7 @@
               <div
                 class="fw-bold fs-3 rotate collapsible mb-7"
                 data-bs-toggle="collapse"
-                href="#kt_modal_add_customer_billing_info"
+                href="#modal_new_order_billing_info"
                 role="button"
                 aria-expanded="false"
                 aria-controls="kt_customer_view_details"
@@ -119,7 +119,7 @@
 
               <!--begin::Billing form-->
               <div
-                id="kt_modal_add_customer_billing_info"
+                id="modal_new_order_billing_info"
                 class="collapse show"
               >
                 <!--begin::Input group-->
@@ -259,7 +259,7 @@
                         name="billing"
                         type="checkbox"
                         value="1"
-                        id="kt_modal_add_customer_billing"
+                        id="modal_new_order_billing"
                         checked
                       />
                       <!--end::Input-->
@@ -267,7 +267,7 @@
                       <!--begin::Label-->
                       <span
                         class="form-check-label fw-semibold text-muted"
-                        for="kt_modal_add_customer_billing"
+                        for="modal_new_order_billing"
                       >
                         Yes
                       </span>
@@ -290,7 +290,7 @@
             <!--begin::Button-->
             <button
               type="reset"
-              id="kt_modal_add_customer_cancel"
+              id="modal_new_order_cancel"
               class="btn btn-light me-3"
             >
               Discard
