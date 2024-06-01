@@ -15,7 +15,7 @@
         v-for="app in filteredApps"
         :key="app.id"
         class="app-card"
-        @click="openOrderModal(app.id)"
+        @click="openOrderModal(app, $event)"
       >
         
         <h2>{{ app.templateName }}</h2>
@@ -24,18 +24,23 @@
           <router-link :to="'/app/' + app.id" class="btn btn-primary">
             Detalii
           </router-link>
-            <a
-            href="#"
-            class="btn btn-sm fw-bold btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#modal_new_order"
-            >Comanda</a>
+          <a
+          href="#"
+          class="btn btn-sm fw-bold btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#modal_new_order"
+          @click="openOrderModal(app, $event)"
+          >Comanda</a>
         </div>
       </div>
     </div>
   </div>
 
-  <OrderModal :selected-app-id="selectedAppId" />
+  <OrderModal
+  :selected-app-id="selectedAppId"
+  :selected-app-template-name="selectedAppTemplateName"
+  :selected-app-version="selectedAppVersion"
+/>
 </template>
 
 <script lang="ts">
@@ -61,7 +66,10 @@ export default defineComponent({
     const selectedCategory = ref('');
     const categories = ref(['CRM', 'ERP', 'Project Management', 'HR', 'Finance']);
     const apps = ref<App[]>([]);
-    const selectedAppId = ref<string | null>(null);
+    // const selectedAppId = ref<string | null>(null);
+    const selectedAppId = ref<string>('');
+    const selectedAppTemplateName = ref('');
+    const selectedAppVersion = ref('');
 
     const fetchTemplates = async () => {
       try {
@@ -78,9 +86,12 @@ export default defineComponent({
       }
     };
 
-    const openOrderModal = (appId: string) => {
-      selectedAppId.value = appId;
-    };
+    const openOrderModal = (app: any, event: Event) => {
+  event.preventDefault();
+  selectedAppId.value = app.id;
+  selectedAppTemplateName.value = app.templateName;
+  selectedAppVersion.value = app.version;
+};
 
     const filteredApps = computed(() => {
       return apps.value.filter((app) => {
@@ -102,6 +113,8 @@ export default defineComponent({
       categories,
       apps,
       selectedAppId,
+      selectedAppTemplateName,
+      selectedAppVersion,
       fetchTemplates,
       openOrderModal,
       filteredApps,

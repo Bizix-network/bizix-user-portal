@@ -16,10 +16,10 @@
         <el-form @submit.prevent="submit()" :model="formData" :rules="rules" ref="formRef">
           <div class="modal-body py-10 px-lg-17">
             <div class="scroll-y me-n7 pe-7" id="modal_new_order_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_new_order_header" data-kt-scroll-wrappers="#modal_new_order_scroll" data-kt-scroll-offset="300px">
-              <div v-if="selectedApp" class="mb-8">
+              <div class="mb-8">
   <h3>Rezumat comandă</h3>
-  <p><strong>Nume template:</strong> {{ selectedApp.templateName }}</p>
-  <p><strong>Versiune:</strong> {{ selectedApp.version }}</p>
+  <p><strong>Nume template:</strong> {{ selectedAppTemplateName }}</p>
+  <p><strong>Versiune:</strong> {{ selectedAppVersion }}</p>
 </div>
               <div class="mb-8">
                 <h3>Detalii facturare</h3>
@@ -108,7 +108,15 @@ export default defineComponent({
   props: {
     selectedAppId: {
       type: String,
-      required: true,
+    default: null,
+    },
+    selectedAppTemplateName: {
+      type: String || null,
+      default: '',  
+    },
+    selectedAppVersion: {
+      type: String || null,
+      default: '',
     },
   },
   setup(props) {
@@ -129,6 +137,17 @@ export default defineComponent({
       currency: '',
     });
     const selectedApp = ref<any>(null);
+    const userId = ref('');
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get('/user');
+        userId.value = response.data.userId;
+      } catch (error) {
+        console.error('Eroare la obținerea userId:', error);
+      }
+    };
+
+    onMounted(fetchUserId);
 
     const rules = ref({
       companyName: [
@@ -212,7 +231,6 @@ export default defineComponent({
 
     onMounted(async () => {
       await fetchUserProfile();
-      await fetchSelectedApp();
     });
 
     const fetchUserProfile = async () => {
@@ -237,17 +255,6 @@ export default defineComponent({
       }
     };
 
-    const fetchSelectedApp = async () => {
-      if (props.selectedAppId) {
-    try {
-      const response = await axios.get(`/api/templates/${props.selectedAppId}`);
-      selectedApp.value = response.data;
-    } catch (error) {
-      console.error('Eroare la preluarea template-ului selectat:', error);
-    }
-  }
-    };
-
     const submit = async () => {
       if (!formRef.value) {
         return;
@@ -259,7 +266,7 @@ export default defineComponent({
 
           try {
             const response = await axios.post('/orders/create-order', {
-              userId: 'ID_utilizator_conectat',
+              userId,
               templateId: props.selectedAppId,
               billingDetails: {
                 companyName: formData.value.companyName,
@@ -273,11 +280,11 @@ export default defineComponent({
                 country: formData.value.country,
                 phone: formData.value.phone,
               },
-              amount: 100,
+              amount: 1,
               currency: formData.value.currency,
-              node: 'ID_nod_Proxmox',
-              vmName: 'Nume_VM',
-              vmVersion: 'Versiune_VM',
+              node: 'm11486',
+              vmName: props.selectedAppTemplateName,
+              vmVersion: props.selectedAppVersion,
             });
 
             if (response.data.url) {
@@ -339,7 +346,7 @@ export default defineComponent({
       addCustomerModalRef,
       selectedApp,
       fetchUserProfile,
-      fetchSelectedApp,
+      userId,
     };
   },
 });
