@@ -4,7 +4,7 @@ import JwtService from "@/core/services/JwtService";
 
 // Creează o instanță Axios
 const instance = axios.create({
-  baseURL: 'http://localhost:8080/api', // Schimbă baza URL-ului după cum este necesar
+  baseURL: 'https://api.bizix.ro/api', // Schimbă baza URL-ului după cum este necesar
 });
 
 // Adaugă un interceptor pentru a include token-ul JWT în antet
