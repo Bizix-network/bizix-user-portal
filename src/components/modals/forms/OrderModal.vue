@@ -84,7 +84,7 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, watch } from 'vue';
 import { hideModal } from "@/core/helpers/modal";
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import axios from "@/plugins/axios";
@@ -108,7 +108,7 @@ export default defineComponent({
   props: {
     selectedAppId: {
       type: String,
-    default: null,
+      default: null,
     },
     selectedAppTemplateName: {
       type: String || null,
@@ -138,16 +138,77 @@ export default defineComponent({
     });
     const selectedApp = ref<any>(null);
     const userId = ref('');
-    const fetchUserId = async () => {
+
+    // Adăugăm un listener pentru evenimentele modalului
+    onMounted(() => {
+      const modalElement = document.getElementById('modal_new_order');
+      if (modalElement) {
+        modalElement.addEventListener('show.bs.modal', () => {
+          // Se execută când modalul începe să se deschidă
+          initializeData();
+        });
+
+        modalElement.addEventListener('hidden.bs.modal', () => {
+          // Se execută când modalul este complet închis
+          formData.value = {
+            companyName: '',
+            companyID: '',
+            firstName: '',
+            lastName: '',
+            address: '',
+            city: '',
+            state: '',
+            zip: '',
+            country: '',
+            phone: '',
+            currency: '',
+          };
+        });
+      }
+    });
+
+    // Eliminăm watch-ul anterior pentru selectedAppId deoarece nu mai este necesar
+    // Eliminăm și apelul inițial la initializeData din onMounted
+
+    const initializeData = async () => {
       try {
-        const response = await axios.get('/user');
-        userId.value = response.data.userId;
+        const [userResponse, profileResponse] = await Promise.all([
+          axios.get('/user'),
+          axios.get('/users/profile')
+        ]);
+
+        userId.value = userResponse.data.userId;
+        const { billing } = profileResponse.data;
+        
+        if (billing) {
+          formData.value = {
+            companyName: billing.companyName || '',
+            companyID: billing.companyID || '',
+            firstName: billing.firstName || '',
+            lastName: billing.lastName || '',
+            address: billing.address || '',
+            city: billing.city || '',
+            state: billing.state || '',
+            zip: billing.zip || '',
+            country: billing.country || '',
+            phone: billing.phone || '',
+            currency: billing.currency || '',
+          };
+        }
       } catch (error) {
-        console.error('Eroare la obținerea userId:', error);
+        console.error('Eroare la inițializarea datelor:', error);
+        Swal.fire({
+          text: 'A apărut o eroare la încărcarea datelor. Vă rugăm încercați din nou.',
+          icon: 'error',
+          buttonsStyling: false,
+          confirmButtonText: 'Ok, am înțeles!',
+          heightAuto: false,
+          customClass: {
+            confirmButton: 'btn btn-primary',
+          },
+        });
       }
     };
-
-    onMounted(fetchUserId);
 
     const rules = ref({
       companyName: [
@@ -228,32 +289,6 @@ export default defineComponent({
         },
       ],
     });
-
-    onMounted(async () => {
-      await fetchUserProfile();
-    });
-
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get('/users/profile');
-        const { billing } = response.data;
-        formData.value = {
-          companyName: billing.companyName || '',
-          companyID: billing.companyID || '',
-          firstName: billing.firstName || '',
-          lastName: billing.lastName || '',
-          address: billing.address || '',
-          city: billing.city || '',
-          state: billing.state || '',
-          zip: billing.zip || '',
-          country: billing.country || '',
-          phone: billing.phone || '',
-          currency: billing.currency || '',
-        };
-      } catch (error) {
-        console.error('Eroare la preluarea profilului utilizatorului:', error);
-      }
-    };
 
     const submit = async () => {
       if (!formRef.value) {
@@ -345,10 +380,10 @@ export default defineComponent({
       loading,
       addCustomerModalRef,
       selectedApp,
-      fetchUserProfile,
       userId,
     };
   },
 });
 </script>
   
+

@@ -4,17 +4,17 @@
     <div class="card-header pt-7">
       <!--begin::Title-->
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bold text-gray-800">Projects Stats</span>
+        <span class="card-label fw-bold text-gray-800">Abonamente BiziX</span>
 
         <span class="text-gray-500 mt-1 fw-semibold fs-6"
-          >Updated 37 minutes ago</span
+          >abonat la 7 aplicatii</span
         >
       </h3>
       <!--end::Title-->
 
       <!--begin::Toolbar-->
       <div class="card-toolbar">
-        <a href="#" class="btn btn-sm btn-light">History</a>
+        <a href="#" class="btn btn-sm btn-light">Istoric</a>
       </div>
       <!--end::Toolbar-->
     </div>
@@ -29,11 +29,11 @@
           <!--begin::Table head-->
           <thead>
             <tr class="fs-7 fw-bold text-gray-500 border-bottom-0">
-              <th class="p-0 pb-3 min-w-175px text-start">ITEM</th>
-              <th class="p-0 pb-3 min-w-100px text-end">BUDGET</th>
-              <th class="p-0 pb-3 min-w-100px text-end">PROGRESS</th>
-              <th class="p-0 pb-3 min-w-175px text-end pe-12">STATUS</th>
-              <th class="p-0 pb-3 w-50px text-end">VIEW</th>
+              <th class="p-0 pb-3 min-w-175px text-start">Aplicatie</th>
+              <th class="p-0 pb-3 min-w-100px text-end">Start</th>
+              <th class="p-0 pb-3 min-w-100px text-end">Expira</th>
+              <th class="p-0 pb-3 min-w-175px text-end pe-12">Status</th>
+              <th class="p-0 pb-3 w-50px text-end">Acceseaza</th>
             </tr>
           </thead>
           <!--end::Table head-->

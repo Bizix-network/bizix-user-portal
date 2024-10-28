@@ -15,37 +15,41 @@
         v-for="app in filteredApps"
         :key="app.id"
         class="app-card"
-        @click="openOrderModal(app, $event)"
       >
-        
         <h2>{{ app.templateName }}</h2>
         <p>{{ app.version }}</p>
+        <p>{{ app.description }}</p>
         <div class="app-actions">
-          <router-link :to="'/app/' + app.id" class="btn btn-primary">
+          <button 
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#modal_app_details"
+            @click="openDetailsModal(app)"
+          >
             Detalii
-          </router-link>
-          <a
-          href="#"
-          class="btn btn-sm fw-bold btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#modal_new_order"
-          @click="openOrderModal(app, $event)"
-          >Comanda</a>
+          </button>
+          
+         
         </div>
       </div>
     </div>
   </div>
 
   <OrderModal
-  :selected-app-id="selectedAppId"
-  :selected-app-template-name="selectedAppTemplateName"
-  :selected-app-version="selectedAppVersion"
-/>
+    :selected-app-id="selectedAppId"
+    :selected-app-template-name="selectedAppTemplateName"
+    :selected-app-version="selectedAppVersion"
+  />
+  <DetailsModal
+    :selected-app-id="selectedAppId"
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
 import OrderModal from "@/components/modals/forms/OrderModal.vue";
+import DetailsModal from "@/components/modals/forms/DetailsModal.vue";
 import axios from "@/plugins/axios";
 
 interface App {
@@ -60,13 +64,13 @@ export default defineComponent({
   name: 'AppCatalog',
   components: {
     OrderModal,
+    DetailsModal,
   },
   setup() {
     const searchQuery = ref('');
     const selectedCategory = ref('');
     const categories = ref(['CRM', 'ERP', 'Project Management', 'HR', 'Finance']);
     const apps = ref<App[]>([]);
-    // const selectedAppId = ref<string | null>(null);
     const selectedAppId = ref<string>('');
     const selectedAppTemplateName = ref('');
     const selectedAppVersion = ref('');
@@ -77,6 +81,7 @@ export default defineComponent({
         apps.value = response.data.map((template: any) => ({
           id: template._id,
           templateName: template.templateName,
+          description: template.description,
           version: template.version,
           category: template.category || 'Uncategorized',
           image: template.image || 'default_image.jpg',
@@ -86,12 +91,16 @@ export default defineComponent({
       }
     };
 
-    const openOrderModal = (app: any, event: Event) => {
-  event.preventDefault();
-  selectedAppId.value = app.id;
-  selectedAppTemplateName.value = app.templateName;
-  selectedAppVersion.value = app.version;
-};
+    const openOrderModal = (app: App, event: Event) => {
+      event.preventDefault();
+      selectedAppId.value = app.id;
+      selectedAppTemplateName.value = app.templateName;
+      selectedAppVersion.value = app.version;
+    };
+
+    const openDetailsModal = (app: App) => {
+      selectedAppId.value = app.id;
+    };
 
     const filteredApps = computed(() => {
       return apps.value.filter((app) => {
@@ -115,8 +124,8 @@ export default defineComponent({
       selectedAppId,
       selectedAppTemplateName,
       selectedAppVersion,
-      fetchTemplates,
       openOrderModal,
+      openDetailsModal,
       filteredApps,
     };
   },

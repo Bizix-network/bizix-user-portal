@@ -47,7 +47,7 @@
           <img
             alt="Logo"
             :src="getAssetPath('media/logos/custom-1.png')"
-            class="h-60px h-lg-75px"
+            class="h-160px h-lg-175px"
           />
         </router-link>
         <!--end::Logo-->
