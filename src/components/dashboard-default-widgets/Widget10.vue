@@ -5,16 +5,17 @@
       <!--begin::Title-->
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold text-gray-800">Abonamente BiziX</span>
-
-        <span class="text-gray-500 mt-1 fw-semibold fs-6"
-          >abonat la 7 aplicatii</span
-        >
+        <span class="text-gray-500 mt-1 fw-semibold fs-6">
+          abonat la {{ subscriptions.length }} aplicații
+        </span>
       </h3>
       <!--end::Title-->
 
       <!--begin::Toolbar-->
       <div class="card-toolbar">
-        <a href="#" class="btn btn-sm btn-light">Istoric</a>
+        <router-link to="/apps/subscriptions" class="btn btn-sm btn-light">
+          Istoric
+        </router-link>
       </div>
       <!--end::Toolbar-->
     </div>
@@ -40,67 +41,54 @@
 
           <!--begin::Table body-->
           <tbody>
-            <template v-for="(row, i) in table" :key="i">
+            <template v-for="(subscription, i) in subscriptions" :key="i">
               <tr>
                 <td>
                   <div class="d-flex align-items-center">
                     <div class="symbol symbol-50px me-3">
-                      <img :src="row.img" class="" alt="" />
+                      <div class="symbol-label fs-2 fw-semibold bg-light-primary text-primary">
+                        <KTIcon icon-name="abstract-24" icon-class="fs-1" />
+                      </div>
                     </div>
 
                     <div class="d-flex justify-content-start flex-column">
-                      <a
-                        href="#"
+                      <router-link
+                        :to="`/apps/subscriptions/view-subscription/${subscription._id}`"
                         class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6"
-                        >{{ row.title }}</a
                       >
-                      <span class="text-gray-500 fw-semibold d-block fs-7">{{
-                        row.name
-                      }}</span>
+                        {{ subscription.name }}
+                      </router-link>
+                      <span class="text-gray-500 fw-semibold d-block fs-7">
+                        {{ subscription.node }}
+                      </span>
                     </div>
                   </div>
                 </td>
 
                 <td class="text-end pe-0">
-                  <span class="text-gray-600 fw-bold fs-6"
-                    >$ {{ row.price }}</span
-                  >
+                  <span class="text-gray-600 fw-bold fs-6">
+                    {{ formatDate(subscription.createdAt) }}
+                  </span>
                 </td>
 
                 <td class="text-end pe-0">
-                  <!--begin::Label-->
-                  <span
-                    v-if="row.icon"
-                    class="badge badge-light-success fs-base"
-                  >
-                    <KTIcon
-                      icon-name="arrow-up"
-                      icon-class="fs-5 text-success ms-n1"
-                    />
-                    {{ row.statistics }} %
+                  <span class="text-gray-600 fw-bold fs-6">
+                    {{ formatDate(subscription.expiresAt) }}
                   </span>
-                  <!--end::Label-->
-                  <!--begin::Label-->
-                  <span v-else class="badge badge-light-danger fs-base">
-                    <KTIcon
-                      icon-name="arrow-down"
-                      icon-class="fs-5 text-danger ms-n1"
-                    />
-                    {{ row.statistics }} %
-                  </span>
-                  <!--end::Label-->
                 </td>
 
                 <td class="text-end pe-12">
                   <span
-                    :class="`badge py-3 px-4 fs-7 badge-light-${row.status.state}`"
-                    >{{ row.status.label }}</span
+                    :class="`badge py-3 px-4 fs-7 badge-light-${getStatusColor(subscription.status)}`"
                   >
+                    {{ subscription.status }}
+                  </span>
                 </td>
 
                 <td class="text-end">
                   <a
-                    href="#"
+                    :href="subscription.publicURL"
+                    target="_blank"
                     class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-30px h-30px"
                   >
                     <KTIcon
@@ -122,87 +110,66 @@
 </template>
 
 <script lang="ts">
-import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
+import axios from "@/plugins/axios";
+
+interface Subscription {
+  _id: string;
+  name: string;
+  node: string;
+  createdAt: string;
+  expiresAt: string;
+  status: string;
+  publicURL: string;
+}
 
 export default defineComponent({
   name: "default-dashboard-widget-10",
-  components: {},
   props: {
     className: { type: String, required: false },
   },
   setup() {
-    const table = [
-      {
-        img: getAssetPath("media/stock/600x600/img-49.jpg"),
-        title: "Mivy App",
-        name: "Jane Cooper",
-        price: "32,400",
-        statistics: "9.2",
-        icon: true,
-        chartColor: "success",
-        status: {
-          label: "In Process",
-          state: "primary",
-        },
-      },
-      {
-        img: getAssetPath("media/stock/600x600/img-40.jpg"),
-        title: "Avionica",
-        name: "Esther Howard",
-        price: "256,910",
-        statistics: "0.4",
-        icon: false,
-        chartColor: "danger",
-        status: {
-          label: "On Hold",
-          state: "warning",
-        },
-      },
-      {
-        img: getAssetPath("media/stock/600x600/img-39.jpg"),
-        title: "Charto CRM",
-        name: "Jenny Wilson",
-        price: "8,220",
-        statistics: "9.2",
-        icon: true,
-        chartColor: "success",
-        status: {
-          label: "In Process",
-          state: "primary",
-        },
-      },
-      {
-        img: getAssetPath("media/stock/600x600/img-47.jpg"),
-        title: "Tower Hill",
-        name: "Cody Fisher",
-        price: "74,000",
-        statistics: "9.2",
-        icon: true,
-        chartColor: "success",
-        status: {
-          label: "Completed",
-          state: "success",
-        },
-      },
-      {
-        img: getAssetPath("media/stock/600x600/img-48.jpg"),
-        title: "9 Degree",
-        name: "Savannah Nguyen",
-        price: "183,300",
-        statistics: "0.4",
-        icon: false,
-        chartColor: "danger",
-        status: {
-          label: "In Process",
-          state: "primary",
-        },
-      },
-    ];
+    const subscriptions = ref<Subscription[]>([]);
+
+    const fetchSubscriptions = async () => {
+      try {
+        const response = await axios.get("/vms");
+        subscriptions.value = response.data;
+      } catch (error) {
+        console.error("Eroare la preluarea abonamentelor:", error);
+      }
+    };
+
+    const formatDate = (dateString: string): string => {
+      const options: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      return new Date(dateString).toLocaleDateString("ro-RO", options);
+    };
+
+    const getStatusColor = (status: string): string => {
+      switch (status) {
+        case "created":
+          return "success";
+        case "pending":
+          return "warning";
+        case "failed":
+          return "danger";
+        default:
+          return "light";
+      }
+    };
+
+    onMounted(() => {
+      fetchSubscriptions();
+    });
 
     return {
-      table,
-      getAssetPath,
+      subscriptions,
+      formatDate,
+      getStatusColor,
     };
   },
 });
