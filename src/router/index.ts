@@ -43,6 +43,15 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: "/blockchain",
+        name: "blockchain",
+        component: () => import("@/views/BlockchainStats.vue"), 
+        meta: {
+          pageTitle: "Statistici Blockchain",
+          breadcrumbs: ["Statistici Blockchain"],
+        },
+      },
+      {
         path: "/profile",
         name: "profile",
         component: () => import("@/views/crafted/account/Account.vue"),
