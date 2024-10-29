@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
 import JwtService from "@/core/services/JwtService";
+import router from '@/router';
 
 // Creează o instanță Axios
 const instance = axios.create({
@@ -18,6 +19,22 @@ instance.interceptors.request.use(
     return config;
   },
   error => {
+    return Promise.reject(error);
+  }
+);
+
+// Adaugă un interceptor pentru răspunsuri
+instance.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response) {
+      // Token expirat - cod 401
+      if (error.response.status === 401) {
+        const authStore = useAuthStore();
+        authStore.logout();
+        router.push('/sign-in');
+      }
+    }
     return Promise.reject(error);
   }
 );

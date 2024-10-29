@@ -111,15 +111,20 @@ export default defineComponent({
       default: null,
     },
     selectedAppTemplateName: {
-      type: String || null,
-      default: '',  
+      type: String,
+      default: '', 
     },
     selectedAppVersion: {
-      type: String || null,
+      type: String,
       default: '',
     },
   },
   setup(props) {
+    console.log('Props primite:', {
+      id: props.selectedAppId,
+      name: props.selectedAppTemplateName,
+      version: props.selectedAppVersion
+    });
     const formRef = ref<null | HTMLFormElement>(null);
     const addCustomerModalRef = ref<null | HTMLElement>(null);
     const loading = ref<boolean>(false);

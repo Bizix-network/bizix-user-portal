@@ -35,15 +35,15 @@
       </div>
     </div>
   </div>
-
-  <OrderModal
-    :selected-app-id="selectedAppId"
-    :selected-app-template-name="selectedAppTemplateName"
-    :selected-app-version="selectedAppVersion"
-  />
-  <DetailsModal
-    :selected-app-id="selectedAppId"
-  />
+  <DetailsModal 
+      :selected-app-id="selectedAppId"
+      @open-order="handleOpenOrder"
+    />
+    <OrderModal
+      :selected-app-id="selectedAppId"
+      :selected-app-template-name="selectedAppTemplateName"
+      :selected-app-version="selectedAppVersion"
+    />
 </template>
 
 <script lang="ts">
@@ -58,6 +58,7 @@ interface App {
   version: string;
   category: string;
   image: string;
+  description: string;
 }
 
 export default defineComponent({
@@ -74,6 +75,16 @@ export default defineComponent({
     const selectedAppId = ref<string>('');
     const selectedAppTemplateName = ref('');
     const selectedAppVersion = ref('');
+
+    const openDetailsModal = (app: App) => {
+      selectedAppId.value = app.id;
+    };
+
+    const handleOpenOrder = (data: { id: string; templateName: string; version: string }) => {
+      selectedAppId.value = data.id;
+      selectedAppTemplateName.value = data.templateName;
+      selectedAppVersion.value = data.version;
+    };
 
     const fetchTemplates = async () => {
       try {
@@ -93,13 +104,14 @@ export default defineComponent({
 
     const openOrderModal = (app: App, event: Event) => {
       event.preventDefault();
+      console.log('Valori setate:', {
+          id: app.id,
+          name: app.templateName,
+          version: app.version
+      });
       selectedAppId.value = app.id;
       selectedAppTemplateName.value = app.templateName;
       selectedAppVersion.value = app.version;
-    };
-
-    const openDetailsModal = (app: App) => {
-      selectedAppId.value = app.id;
     };
 
     const filteredApps = computed(() => {
@@ -124,8 +136,8 @@ export default defineComponent({
       selectedAppId,
       selectedAppTemplateName,
       selectedAppVersion,
-      openOrderModal,
       openDetailsModal,
+      handleOpenOrder,
       filteredApps,
     };
   },

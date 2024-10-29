@@ -61,7 +61,13 @@
               <button type="button" class="btn btn-light-primary btn-sm me-3" data-bs-dismiss="modal">
                 <i class="fas fa-times me-2"></i>Închide
               </button>
-              <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modal_new_order">
+              <button 
+                type="button" 
+                class="btn btn-primary btn-lg" 
+                data-bs-toggle="modal" 
+                data-bs-target="#modal_new_order"
+                @click="openOrderModal"
+              >
                 <i class="fas fa-shopping-cart me-2"></i>Comandă acum
               </button>
             </div>
@@ -96,7 +102,7 @@
         required: true
       },
     },
-    setup(props) {
+    setup(props, { emit }) {
       const detailsModalRef = ref<null | HTMLElement>(null);
       const templateData = ref<TemplateData | null>(null);
       const loading = ref<boolean>(false);
@@ -134,12 +140,23 @@
           fetchTemplateDetails();
         }
       }, { immediate: true });
-  
+      
+      const openOrderModal = () => {
+      if (templateData.value) {
+        emit('open-order', {
+          id: props.selectedAppId,
+          templateName: templateData.value.templateName,
+          version: templateData.value.version
+        });
+      }
+      };
+
       return {
         templateData,
         detailsModalRef,
         loading,
         formatDate,
+        openOrderModal,
       };
     },
   });
